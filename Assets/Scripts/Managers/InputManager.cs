@@ -8,7 +8,7 @@ using UnityEngine;
 public class InputManager : MonoBehaviour
 {
     
-    public InputManager Instance { get; private set; }
+    public static InputManager Instance { get; private set; }
     private PlayerActions _playerActions;
 
     private void Awake() {
