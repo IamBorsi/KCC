@@ -6,7 +6,7 @@ using UnityEngine;
 /// Class to manage the player movement.
 /// </summary>
 [RequireComponent(typeof(Rigidbody))]
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : MonoBehaviour, IGrounded
 {
     /// <summary> Default player movement speed. </summary>
     private const float DefaultMovementSpeed = 7f;
@@ -16,19 +16,27 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] protected virtual float _movementSpeed => DefaultMovementSpeed;
     [SerializeField] protected virtual float _groundedDistance => DefaultGroundedDistance;
-    private InputManager _inputManager;
 
-    private CharacterController characterController;
+    [Header("Grounded Settings")]
+    [SerializeField] private Transform _feetTransform;
+    [SerializeField] private LayerMask _groundLayerMask;
+    private bool _isGrounded;
+    public bool IsGrounded => _isGrounded;
+    public Transform FeetTransform { get { return _feetTransform; } }
+
+    private InputManager _inputManager;
 
     private void Start() {
         // Get the reference to the Input Manager
         // (we do it in start so we are sure we assigned the instance during Awake in the InputManager script).
         _inputManager = InputManager.Instance;
-        characterController = GetComponent<CharacterController>();
+
+        _isGrounded = true;
     }
 
     private void Update() {
 
+        CheckGrounded();
         HandleMovement();
 
     }
@@ -50,5 +58,14 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
+    public void CheckGrounded() {
+
+        if (Physics.CheckSphere(_feetTransform.position, KCC_Gizmos.KCC_CheckSphereRadius, _groundLayerMask)) {
+            _isGrounded = true;
+        } else {
+            _isGrounded = false;
+        }
+
+    }
 
 }
