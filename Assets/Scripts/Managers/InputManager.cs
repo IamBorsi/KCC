@@ -51,4 +51,13 @@ public class InputManager : MonoBehaviour
         return _playerActions.Gameplay.Move.ReadValue<Vector2>();
     }
 
+    /// <summary>
+    /// Function to get the normalized Vector2 for the mouse delta.
+    /// </summary>
+    /// <returns>Vector2</returns>
+    public Vector2 GetMouseDeltaNormalized() {
+        // The Vector2 is already normalized through processors instructions in the PlayerActions input actions.
+        return _playerActions.Gameplay.Look.ReadValue<Vector2>();
+    }
+
 }

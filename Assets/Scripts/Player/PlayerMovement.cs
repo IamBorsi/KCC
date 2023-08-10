@@ -18,11 +18,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] protected virtual float _groundedDistance => DefaultGroundedDistance;
     private InputManager _inputManager;
 
+    private CharacterController characterController;
+
     private void Start() {
         // Get the reference to the Input Manager
         // (we do it in start so we are sure we assigned the instance during Awake in the InputManager script).
         _inputManager = InputManager.Instance;
-
+        characterController = GetComponent<CharacterController>();
     }
 
     private void Update() {
@@ -37,9 +39,14 @@ public class PlayerMovement : MonoBehaviour
     private void HandleMovement() {
 
         Vector2 inputVector = _inputManager.GetPlayerMovementNormalized();
+
+        // Handle player rotation based on camera rotation
+        Vector3 currentRotation = GetComponent<CameraController>().CameraTransform.eulerAngles;
+        transform.eulerAngles = new Vector3(0f, currentRotation.y, 0f);
+
         Vector3 movementVector = new Vector3(inputVector.x, 0f, inputVector.y);
 
-        transform.position += movementVector * _movementSpeed * Time.deltaTime;
+        transform.position += (transform.rotation * movementVector) * _movementSpeed * Time.deltaTime;
 
     }
 
